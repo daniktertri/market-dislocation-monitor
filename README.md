@@ -42,19 +42,23 @@ npm run dev
    - `KV_REST_API_URL`
    - `KV_REST_API_TOKEN`
 
-4. Set up a cron job or external scheduler to call `/api/update` every 60 seconds
+4. The cron job is configured to run once daily (9:00 AM UTC) due to Vercel Hobby plan limitations.
+   For more frequent updates, upgrade to Pro plan or use an external scheduler.
 
 ### Cron Setup (Vercel)
 
-Add to `vercel.json`:
+The cron job is configured in `vercel.json`:
 ```json
 {
   "crons": [{
     "path": "/api/update",
-    "schedule": "*/1 * * * *"
+    "schedule": "0 9 * * *"
   }]
 }
 ```
+
+**Note**: Hobby accounts are limited to daily cron jobs. The schedule `0 9 * * *` runs once per day at 9:00 AM UTC.
+For real-time monitoring (every 60 seconds), upgrade to Pro plan or use an external scheduler service.
 
 ## Signal Logic
 
