@@ -38,11 +38,16 @@ npm run dev
 
 1. Push to GitHub
 2. Import project in Vercel
-3. Add environment variables (optional, for Vercel KV):
+3. **Important**: In Vercel project settings, ensure:
+   - **Framework Preset**: Next.js
+   - **Build Command**: `next build` (or leave empty for auto-detection)
+   - **Output Directory**: Leave empty (Next.js handles this automatically)
+   - **Install Command**: `npm install` (or leave empty)
+4. Add environment variables (optional, for Vercel KV):
    - `KV_REST_API_URL`
    - `KV_REST_API_TOKEN`
 
-4. The cron job is configured to run once daily (9:00 AM UTC) due to Vercel Hobby plan limitations.
+5. The cron job is configured to run once daily (9:00 AM UTC) due to Vercel Hobby plan limitations.
    For more frequent updates, upgrade to Pro plan or use an external scheduler.
 
 ### Cron Setup (Vercel)
