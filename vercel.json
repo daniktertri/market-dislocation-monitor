@@ -4,11 +4,6 @@
       "path": "/api/update",
       "schedule": "0 9 * * *"
     }
-  ],
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
 
