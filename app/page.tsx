@@ -12,7 +12,7 @@ export default function Home() {
   const fetchSnapshot = async () => {
     try {
       const response = await fetch('/api/snapshot', {
-        next: { revalidate: 0 },
+        cache: 'no-store',
       });
       
       if (!response.ok) {
@@ -67,7 +67,39 @@ export default function Home() {
         )}
 
         {error && (
-          <div className="text-center py-12 text-yellow-500">{error}</div>
+          <div className="text-center py-12">
+            <div className="text-yellow-500 mb-4">{error}</div>
+            <div className="space-y-4">
+              <button
+                onClick={async () => {
+                  setLoading(true);
+                  setError(null);
+                  // First trigger the update endpoint to initialize data
+                  try {
+                    await fetch('/api/update', { method: 'GET' });
+                    // Then fetch the snapshot
+                    await fetchSnapshot();
+                  } catch (err) {
+                    console.error('Error initializing:', err);
+                    setError('Failed to initialize. Please try again.');
+                    setLoading(false);
+                  }
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white"
+              >
+                Initialize Data
+              </button>
+              <button
+                onClick={fetchSnapshot}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded text-white ml-2"
+              >
+                Retry
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              If this is the first load, click "Initialize Data" to fetch market data.
+            </p>
+          </div>
         )}
 
         {snapshot && !loading && (
