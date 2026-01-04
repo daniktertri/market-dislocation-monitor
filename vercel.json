@@ -6,7 +6,7 @@
     }
   ],
   "functions": {
-    "app/api/update/route.ts": {
+    "app/api/**/*.ts": {
       "maxDuration": 30
     }
   }
