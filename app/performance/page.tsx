@@ -54,11 +54,11 @@ const totalReturn = ((finalEquity - initialEquity) / initialEquity) * 100;
 const maxEquity = Math.max(...equity);
 const minEquity = Math.min(...equity);
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-50px' },
-  transition: { duration: 0.4, ease: 'easeOut' }
+const fadeIn = {
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  viewport: { once: true },
+  transition: { duration: 0.3 }
 };
 
 export default function PerformancePage() {
@@ -82,42 +82,36 @@ export default function PerformancePage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       <motion.h1
         className="text-3xl font-bold uppercase mb-8 tracking-wider text-shadow-pixel"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
         Performance Metrics
       </motion.h1>
 
       <motion.div
         className="grid grid-cols-4 gap-4 mb-8"
-        {...fadeInUp}
+        {...fadeIn}
       >
         {[
           { label: 'Total Return', value: `${totalReturn.toFixed(2)}%` },
           { label: 'Max Drawdown', value: `${maxDrawdown.toFixed(2)}%` },
           { label: 'Peak Equity', value: `$${maxEquity.toLocaleString()}` },
           { label: 'Current Equity', value: `$${finalEquity.toLocaleString()}` }
-        ].map((stat, index) => (
-          <motion.div
+        ].map((stat) => (
+          <div
             key={stat.label}
-            className="terminal-border bg-white p-4 card-gradient hover:bg-gray-100 transition-all duration-200"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            whileHover={{ translateY: -2, translateX: 2 }}
+            className="terminal-border bg-white p-4 card-gradient hover:bg-gray-100 transition-colors duration-200"
           >
             <div className="text-xs uppercase font-bold mb-1">{stat.label}</div>
             <div className="text-2xl font-mono">{stat.value}</div>
-          </motion.div>
+          </div>
         ))}
       </motion.div>
 
       <motion.div
         className="terminal-border bg-white p-6 mb-8 card-gradient"
-        {...fadeInUp}
-        transition={{ delay: 0.2 }}
+        {...fadeIn}
       >
         <h2 className="text-lg font-bold uppercase mb-4 tracking-wider">Equity Curve</h2>
         <div className="relative" style={{ height: chartHeight + padding * 2 }}>
@@ -147,27 +141,21 @@ export default function PerformancePage() {
             ))}
             
             {/* Equity curve */}
-            <motion.polyline
+            <polyline
               points={equity.map((value, index) => `${scaleX(index)},${scaleEquityY(value)}`).join(' ')}
               fill="none"
               stroke="#000"
               strokeWidth="2"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.5, ease: 'easeInOut' }}
             />
             
             {/* Max drawdown marker */}
-            <motion.circle
+            <circle
               cx={scaleX(maxDrawdownIndex)}
               cy={scaleEquityY(equity[maxDrawdownIndex])}
               r="4"
-              fill="#ff0000"
+              fill="#c62828"
               stroke="#000"
               strokeWidth="1"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1.5, duration: 0.3 }}
             />
           </svg>
         </div>
@@ -175,8 +163,7 @@ export default function PerformancePage() {
 
       <motion.div
         className="terminal-border bg-white p-6 card-gradient"
-        {...fadeInUp}
-        transition={{ delay: 0.4 }}
+        {...fadeIn}
       >
         <h2 className="text-lg font-bold uppercase mb-4 tracking-wider">Drawdown Analysis</h2>
         <div className="relative" style={{ height: chartHeight + padding * 2 }}>
@@ -206,26 +193,20 @@ export default function PerformancePage() {
             ))}
             
             {/* Drawdown area */}
-            <motion.polygon
+            <polygon
               points={`${padding},${scaleDrawdownY(0)} ${drawdowns.map((value, index) => `${scaleX(index)},${scaleDrawdownY(value)}`).join(' ')} ${chartWidth - padding},${scaleDrawdownY(0)}`}
               fill="#c62828"
               opacity="0.2"
               stroke="#000"
               strokeWidth="1"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.2 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
             />
             
             {/* Drawdown line */}
-            <motion.polyline
+            <polyline
               points={drawdowns.map((value, index) => `${scaleX(index)},${scaleDrawdownY(value)}`).join(' ')}
               fill="none"
               stroke="#c62828"
               strokeWidth="2"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.2 }}
             />
           </svg>
         </div>

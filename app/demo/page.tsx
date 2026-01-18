@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 
 const mockData = [
   {
@@ -78,41 +77,17 @@ const mockData = [
   },
 ];
 
-function TypingText({ text, delay = 0 }: { text: string; delay?: number }) {
-  const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsTyping(true);
-      let currentIndex = 0;
-      const typingInterval = setInterval(() => {
-        if (currentIndex < text.length) {
-          setDisplayedText(text.slice(0, currentIndex + 1));
-          currentIndex++;
-        } else {
-          clearInterval(typingInterval);
-          setIsTyping(false);
-        }
-      }, 15);
-      return () => clearInterval(typingInterval);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [text, delay]);
-
-  return (
-    <span>
-      {displayedText}
-      {isTyping && <span className="animate-pulse">|</span>}
-    </span>
-  );
-}
-
 const getBiasColor = (bias: string) => {
   if (bias === 'Bullish') return 'bg-[#2e7d32] text-white';
   if (bias === 'Bearish') return 'bg-[#c62828] text-white';
   return 'bg-gray-100 text-black';
+};
+
+const fadeIn = {
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  viewport: { once: true },
+  transition: { duration: 0.3 }
 };
 
 export default function DemoPage() {
@@ -120,19 +95,16 @@ export default function DemoPage() {
     <div className="max-w-7xl mx-auto px-4 py-12">
       <motion.h1
         className="text-3xl font-bold uppercase mb-8 tracking-wider text-shadow-pixel"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
         News Feed Demo
       </motion.h1>
 
       <motion.div
         className="terminal-border bg-white overflow-x-auto card-gradient"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.4 }}
+        {...fadeIn}
       >
         <table className="w-full border-collapse">
           <thead>
@@ -148,15 +120,11 @@ export default function DemoPage() {
           </thead>
           <tbody>
             {mockData.map((row, index) => (
-              <motion.tr
+              <tr
                 key={index}
                 className={`border-b border-gray-300 transition-colors duration-200 ${
                   index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 hover:bg-gray-100'
                 }`}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <td className="border-r-2 border-gray-300 p-3 text-xs font-mono">{row.time}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs">{row.source}</td>
@@ -168,10 +136,8 @@ export default function DemoPage() {
                 </td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs uppercase">{row.horizon}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs font-mono">{row.confidence}</td>
-                <td className="p-3 text-xs">
-                  <TypingText text={row.summary} delay={index * 200} />
-                </td>
-              </motion.tr>
+                <td className="p-3 text-xs">{row.summary}</td>
+              </tr>
             ))}
           </tbody>
         </table>
@@ -179,10 +145,7 @@ export default function DemoPage() {
 
       <motion.div
         className="mt-6 text-xs text-gray-600"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
+        {...fadeIn}
       >
         <div className="uppercase font-bold mb-2">Note:</div>
         <div>Data shown is simulated for demonstration purposes. Real-time feed requires active monitoring subscription.</div>

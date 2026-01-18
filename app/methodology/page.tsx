@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion';
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-50px' },
-  transition: { duration: 0.4, ease: 'easeOut' }
+const fadeIn = {
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  viewport: { once: true },
+  transition: { duration: 0.3 }
 };
 
 export default function MethodologyPage() {
@@ -14,9 +14,9 @@ export default function MethodologyPage() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       <motion.h1
         className="text-3xl font-bold uppercase mb-8 tracking-wider text-shadow-pixel"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
         Methodology
       </motion.h1>
@@ -68,26 +68,18 @@ export default function MethodologyPage() {
               'Past performance of classification accuracy does not guarantee future results. Market conditions, regulatory changes, and information landscape evolution may affect system performance over time.'
             ]
           }
-        ].map((section, index) => (
+        ].map((section) => (
           <motion.section
             key={section.title}
-            className="terminal-border bg-white p-6 card-gradient hover:bg-gray-100 transition-all duration-200"
-            {...fadeInUp}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ translateY: -2, translateX: 2 }}
+            className="terminal-border bg-white p-6 card-gradient hover:bg-gray-100 transition-colors duration-200"
+            {...fadeIn}
           >
             <h2 className="text-xl font-bold uppercase mb-4 tracking-wider">{section.title}</h2>
             <div className="space-y-4 text-sm leading-relaxed">
               {section.content.map((paragraph, pIndex) => (
-                <motion.p
-                  key={pIndex}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: index * 0.1 + pIndex * 0.05 }}
-                >
+                <p key={pIndex}>
                   {paragraph}
-                </motion.p>
+                </p>
               ))}
             </div>
           </motion.section>
