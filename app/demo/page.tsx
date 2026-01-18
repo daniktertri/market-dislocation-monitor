@@ -1,5 +1,8 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
 const mockData = [
   {
     time: '2024-01-15 14:32:15',
@@ -14,7 +17,7 @@ const mockData = [
     time: '2024-01-15 14:28:42',
     source: 'The Block',
     category: 'Technology',
-    bias: 'Positive',
+    bias: 'Bullish',
     horizon: 'Short',
     confidence: '0.92',
     summary: 'Ethereum network upgrade reduces gas costs by 15% in testnet deployment.'
@@ -23,7 +26,7 @@ const mockData = [
     time: '2024-01-15 14:25:18',
     source: 'Reuters',
     category: 'Market',
-    bias: 'Negative',
+    bias: 'Bearish',
     horizon: 'Short',
     confidence: '0.78',
     summary: 'Major exchange reports technical issues during high-volume trading session.'
@@ -32,7 +35,7 @@ const mockData = [
     time: '2024-01-15 14:20:05',
     source: 'Bloomberg',
     category: 'Institutional',
-    bias: 'Positive',
+    bias: 'Bullish',
     horizon: 'Long',
     confidence: '0.95',
     summary: 'Asset management firm announces $500M allocation to digital assets.'
@@ -50,7 +53,7 @@ const mockData = [
     time: '2024-01-15 14:10:22',
     source: 'CoinTelegraph',
     category: 'Regulation',
-    bias: 'Negative',
+    bias: 'Bearish',
     horizon: 'Long',
     confidence: '0.73',
     summary: 'Regulatory body proposes stricter KYC requirements for DeFi protocols.'
@@ -68,64 +71,122 @@ const mockData = [
     time: '2024-01-15 14:00:47',
     source: 'CoinDesk',
     category: 'Institutional',
-    bias: 'Positive',
+    bias: 'Bullish',
     horizon: 'Medium',
     confidence: '0.91',
     summary: 'Central bank digital currency pilot program expands to 5 additional countries.'
   },
 ];
 
+function TypingText({ text, delay = 0 }: { text: string; delay?: number }) {
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsTyping(true);
+      let currentIndex = 0;
+      const typingInterval = setInterval(() => {
+        if (currentIndex < text.length) {
+          setDisplayedText(text.slice(0, currentIndex + 1));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setIsTyping(false);
+        }
+      }, 15);
+      return () => clearInterval(typingInterval);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [text, delay]);
+
+  return (
+    <span>
+      {displayedText}
+      {isTyping && <span className="animate-pulse">|</span>}
+    </span>
+  );
+}
+
+const getBiasColor = (bias: string) => {
+  if (bias === 'Bullish') return 'bg-[#2e7d32] text-white';
+  if (bias === 'Bearish') return 'bg-[#c62828] text-white';
+  return 'bg-gray-100 text-black';
+};
+
 export default function DemoPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold uppercase mb-8 tracking-wider">
+      <motion.h1
+        className="text-3xl font-bold uppercase mb-8 tracking-wider text-shadow-pixel"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         News Feed Demo
-      </h1>
+      </motion.h1>
 
-      <div className="terminal-border bg-white overflow-x-auto">
+      <motion.div
+        className="terminal-border bg-white overflow-x-auto card-gradient"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.4 }}
+      >
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b-2 border-black bg-gray-100">
-              <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Time</th>
+              <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold font-mono">Time</th>
               <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Source</th>
               <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Category</th>
               <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Bias</th>
               <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Horizon</th>
-              <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold">Confidence</th>
+              <th className="border-r-2 border-black p-3 text-left text-xs uppercase font-bold font-mono">Confidence</th>
               <th className="p-3 text-left text-xs uppercase font-bold">Summary</th>
             </tr>
           </thead>
           <tbody>
             {mockData.map((row, index) => (
-              <tr 
-                key={index} 
-                className={`border-b border-gray-300 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
+              <motion.tr
+                key={index}
+                className={`border-b border-gray-300 transition-colors duration-200 ${
+                  index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 hover:bg-gray-100'
+                }`}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <td className="border-r-2 border-gray-300 p-3 text-xs font-mono">{row.time}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs">{row.source}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs uppercase">{row.category}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs">
-                  <span className={`inline-block px-2 py-1 border border-black ${
-                    row.bias === 'Positive' ? 'bg-green-100' : 
-                    row.bias === 'Negative' ? 'bg-red-100' : 
-                    'bg-gray-100'
-                  }`}>
+                  <span className={`inline-block px-2 py-1 border border-black ${getBiasColor(row.bias)}`}>
                     {row.bias}
                   </span>
                 </td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs uppercase">{row.horizon}</td>
                 <td className="border-r-2 border-gray-300 p-3 text-xs font-mono">{row.confidence}</td>
-                <td className="p-3 text-xs">{row.summary}</td>
-              </tr>
+                <td className="p-3 text-xs">
+                  <TypingText text={row.summary} delay={index * 200} />
+                </td>
+              </motion.tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
-      <div className="mt-6 text-xs text-gray-600">
+      <motion.div
+        className="mt-6 text-xs text-gray-600"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5 }}
+      >
         <div className="uppercase font-bold mb-2">Note:</div>
         <div>Data shown is simulated for demonstration purposes. Real-time feed requires active monitoring subscription.</div>
-      </div>
+      </motion.div>
     </div>
   );
 }

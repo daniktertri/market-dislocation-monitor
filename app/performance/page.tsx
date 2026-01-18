@@ -1,5 +1,7 @@
 'use client';
 
+import { motion } from 'framer-motion';
+
 // Mock equity curve data
 const generateEquityData = () => {
   const data = [];
@@ -52,6 +54,13 @@ const totalReturn = ((finalEquity - initialEquity) / initialEquity) * 100;
 const maxEquity = Math.max(...equity);
 const minEquity = Math.min(...equity);
 
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-50px' },
+  transition: { duration: 0.4, ease: 'easeOut' }
+};
+
 export default function PerformancePage() {
   const chartHeight = 300;
   const chartWidth = 800;
@@ -71,30 +80,45 @@ export default function PerformancePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold uppercase mb-8 tracking-wider">
+      <motion.h1
+        className="text-3xl font-bold uppercase mb-8 tracking-wider text-shadow-pixel"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         Performance Metrics
-      </h1>
+      </motion.h1>
 
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="terminal-border bg-white p-4">
-          <div className="text-xs uppercase font-bold mb-1">Total Return</div>
-          <div className="text-2xl font-mono">{totalReturn.toFixed(2)}%</div>
-        </div>
-        <div className="terminal-border bg-white p-4">
-          <div className="text-xs uppercase font-bold mb-1">Max Drawdown</div>
-          <div className="text-2xl font-mono">{maxDrawdown.toFixed(2)}%</div>
-        </div>
-        <div className="terminal-border bg-white p-4">
-          <div className="text-xs uppercase font-bold mb-1">Peak Equity</div>
-          <div className="text-2xl font-mono">${maxEquity.toLocaleString()}</div>
-        </div>
-        <div className="terminal-border bg-white p-4">
-          <div className="text-xs uppercase font-bold mb-1">Current Equity</div>
-          <div className="text-2xl font-mono">${finalEquity.toLocaleString()}</div>
-        </div>
-      </div>
+      <motion.div
+        className="grid grid-cols-4 gap-4 mb-8"
+        {...fadeInUp}
+      >
+        {[
+          { label: 'Total Return', value: `${totalReturn.toFixed(2)}%` },
+          { label: 'Max Drawdown', value: `${maxDrawdown.toFixed(2)}%` },
+          { label: 'Peak Equity', value: `$${maxEquity.toLocaleString()}` },
+          { label: 'Current Equity', value: `$${finalEquity.toLocaleString()}` }
+        ].map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            className="terminal-border bg-white p-4 card-gradient hover:bg-gray-100 transition-all duration-200"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ translateY: -2, translateX: 2 }}
+          >
+            <div className="text-xs uppercase font-bold mb-1">{stat.label}</div>
+            <div className="text-2xl font-mono">{stat.value}</div>
+          </motion.div>
+        ))}
+      </motion.div>
 
-      <div className="terminal-border bg-white p-6 mb-8">
+      <motion.div
+        className="terminal-border bg-white p-6 mb-8 card-gradient"
+        {...fadeInUp}
+        transition={{ delay: 0.2 }}
+      >
         <h2 className="text-lg font-bold uppercase mb-4 tracking-wider">Equity Curve</h2>
         <div className="relative" style={{ height: chartHeight + padding * 2 }}>
           <svg width="100%" height={chartHeight + padding * 2} viewBox={`0 0 ${chartWidth} ${chartHeight + padding * 2}`}>
@@ -123,27 +147,37 @@ export default function PerformancePage() {
             ))}
             
             {/* Equity curve */}
-            <polyline
+            <motion.polyline
               points={equity.map((value, index) => `${scaleX(index)},${scaleEquityY(value)}`).join(' ')}
               fill="none"
               stroke="#000"
               strokeWidth="2"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.5, ease: 'easeInOut' }}
             />
             
             {/* Max drawdown marker */}
-            <circle
+            <motion.circle
               cx={scaleX(maxDrawdownIndex)}
               cy={scaleEquityY(equity[maxDrawdownIndex])}
               r="4"
               fill="#ff0000"
               stroke="#000"
               strokeWidth="1"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.5, duration: 0.3 }}
             />
           </svg>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="terminal-border bg-white p-6">
+      <motion.div
+        className="terminal-border bg-white p-6 card-gradient"
+        {...fadeInUp}
+        transition={{ delay: 0.4 }}
+      >
         <h2 className="text-lg font-bold uppercase mb-4 tracking-wider">Drawdown Analysis</h2>
         <div className="relative" style={{ height: chartHeight + padding * 2 }}>
           <svg width="100%" height={chartHeight + padding * 2} viewBox={`0 0 ${chartWidth} ${chartHeight + padding * 2}`}>
@@ -172,24 +206,30 @@ export default function PerformancePage() {
             ))}
             
             {/* Drawdown area */}
-            <polygon
+            <motion.polygon
               points={`${padding},${scaleDrawdownY(0)} ${drawdowns.map((value, index) => `${scaleX(index)},${scaleDrawdownY(value)}`).join(' ')} ${chartWidth - padding},${scaleDrawdownY(0)}`}
-              fill="#ff0000"
+              fill="#c62828"
               opacity="0.2"
               stroke="#000"
               strokeWidth="1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
             />
             
             {/* Drawdown line */}
-            <polyline
+            <motion.polyline
               points={drawdowns.map((value, index) => `${scaleX(index)},${scaleDrawdownY(value)}`).join(' ')}
               fill="none"
-              stroke="#ff0000"
+              stroke="#c62828"
               strokeWidth="2"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.2 }}
             />
           </svg>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
