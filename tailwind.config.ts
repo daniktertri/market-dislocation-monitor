@@ -7,9 +7,12 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        mono: ['Courier New', 'Monaco', 'Consolas', 'monospace'],
+      },
+    },
   },
   plugins: [],
 }
 export default config
-
