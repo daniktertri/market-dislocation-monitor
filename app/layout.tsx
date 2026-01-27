@@ -19,20 +19,20 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
               <Link href="/" className="text-lg font-bold uppercase tracking-wider">
-                Crypto News Monitor
+                Market Dislocation Monitor
               </Link>
               <div className="flex gap-6">
                 <Link href="/" className="uppercase text-sm hover:underline">
-                  Home
+                  Accueil
                 </Link>
-                <Link href="/demo" className="uppercase text-sm hover:underline">
-                  Demo
+                <Link href="/register" className="uppercase text-sm hover:underline">
+                  Inscription
                 </Link>
-                <Link href="/performance" className="uppercase text-sm hover:underline">
-                  Performance
+                <Link href="/ranking" className="uppercase text-sm hover:underline">
+                  Classement
                 </Link>
-                <Link href="/methodology" className="uppercase text-sm hover:underline">
-                  Methodology
+                <Link href="/matches" className="uppercase text-sm hover:underline">
+                  Matchs
                 </Link>
               </div>
             </div>

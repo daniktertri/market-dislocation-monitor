@@ -19,7 +19,7 @@ export default function Home() {
         transition={{ duration: 0.4 }}
       >
         <h1 className="text-3xl font-bold uppercase mb-6 tracking-wider text-shadow-pixel">
-          Continuous monitoring and structured analysis of crypto-relevant news.
+          Plateforme de paris sportifs
         </h1>
       </motion.div>
 
@@ -28,40 +28,30 @@ export default function Home() {
         {...fadeIn}
       >
         <h2 className="text-xl font-bold uppercase mb-6 tracking-wider">
-          System Flow
+          Fonctionnalités
         </h2>
-        <div className="grid grid-cols-4 gap-4">
-          {['News', 'Analysis', 'Insight', 'Tracking'].map((title) => (
+        <div className="grid grid-cols-3 gap-4">
+          {['Inscription', 'Classement', 'Gestion'].map((title) => (
             <div
               key={title}
               className="border-2 border-black p-4 bg-white hover:bg-gray-100 transition-colors duration-200"
             >
               <div className="text-sm uppercase font-bold mb-2">{title}</div>
               <div className="text-xs text-gray-600">
-                {title === 'News' && 'Raw feed ingestion from multiple sources'}
-                {title === 'Analysis' && 'Structured extraction and classification'}
-                {title === 'Insight' && 'Bias detection and horizon mapping'}
-                {title === 'Tracking' && 'Performance monitoring and validation'}
+                {title === 'Inscription' && 'Créez votre compte avec nom, prénom, pseudo et email'}
+                {title === 'Classement' && 'Consultez le classement avec pseudos et emails des participants'}
+                {title === 'Gestion' && 'Gérez les matchs et supprimez ceux créés pour les tests'}
               </div>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="h-0.5 bg-black flex-1"></div>
-          <div className="mx-2 text-xs">→</div>
-          <div className="h-0.5 bg-black flex-1"></div>
-          <div className="mx-2 text-xs">→</div>
-          <div className="h-0.5 bg-black flex-1"></div>
-          <div className="mx-2 text-xs">→</div>
-          <div className="h-0.5 bg-black flex-1"></div>
-        </div>
       </motion.div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-6 mt-8">
         {[
-          { title: 'Real-time', desc: 'Continuous monitoring of news feeds with sub-minute latency' },
-          { title: 'Structured', desc: 'Automated extraction of metadata, bias, and temporal relevance' },
-          { title: 'Validated', desc: 'Performance tracking against market movements and outcomes' }
+          { title: 'Inscription', desc: 'Créez votre compte pour participer aux paris' },
+          { title: 'Classement', desc: 'Consultez les résultats et contactez les gagnants' },
+          { title: 'Matchs', desc: 'Gérez les matchs et supprimez ceux de test' }
         ].map((item) => (
           <motion.div
             key={item.title}
